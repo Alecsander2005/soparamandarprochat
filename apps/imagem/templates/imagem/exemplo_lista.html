@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+<!-- Aqui eu defino o título da página -->
+{% block title %}Imagens{% endblock title %}
+
+<!-- Aqui eu defino o título que aparece no topo da tela -->
+{% block canvas_title %}Imagens{% endblock canvas_title %}
+
+<!-- Aqui eu defino o conteúdo do breadcrumb -->
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href={% url "index" %}>Início</a></li>
+<li class="breadcrumb-item active"><a>Imagens</a></li>
+{% endblock breadcrumb %}
+
+<!-- Aqui eu defino o conteúdo da página -->
+{% block content %}
+<div class="row">
+    {% for item in imagem %}
+    <div class="col-sm-12">
+        <div class="card mb-2">
+            <div class="row no-gutters">
+                <div class="col-md-2 d-flex align-items-center justify-content-center">
+                    <img src="{{ item.imagem.url }}" class="card-img" alt="{{ item.nome }}" style="height: 10rem; object-fit: scale-down;">
+                </div>
+                <div class="col-md-10">
+                    <div class="card-body">
+                        <h4 class="card-title">{{ item.nome }}</h4>
+                        <p class="card-text">
+                            <b>Id:</b> {{ item.id }}<br>
+                            <b>Nome:</b> {{ item.nome }}
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'imagem:detalhe' item.id %}" class="btn btn-primary">Abrir</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% empty %}
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-text">Nenhuma imagem cadastrada. Que tal cadastrar uma?</h5>
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'imagem:cadastro' %}" class="btn btn-primary">Cadastrar Imagem</a>
+        <a href="{% url 'index' %}" class="btn btn-secondary">Voltar</a>
+    </div>
+</div>
+{% endfor %}
+{% endblock content %}
+
+<!-- Aqui eu defino scripts customizados -->
+{% block scripts %}
+{% endblock scripts %}
+

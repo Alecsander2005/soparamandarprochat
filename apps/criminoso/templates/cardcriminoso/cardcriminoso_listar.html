@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block title %}Criminosos Procurados{% endblock title %}
+
+{% block canvas_title %}Criminosos Procurados{% endblock canvas_title %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url "criminoso:card_criminoso" %}">Início</a></li>
+<li class="breadcrumb-item active"><a>Criminosos</a></li>
+{% endblock breadcrumb %}
+
+{% load static %}
+{% block content %}
+<style>
+/* ... (Seu CSS existente, sem alterações necessárias aqui) ... */
+
+.card-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 15px;
+}
+
+.card-wanted {
+    width: 280px;
+    height: 380px;
+    background-image: url("{% static 'img/fundoCard.svg' %}");
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 30px 20px 10px; /* Reduzir o padding-bottom para dar espaço aos botões */
+    text-align: center;
+    font-family: 'Times New Roman', serif;
+    color: #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.card-wanted h5 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: darkred;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.card-wanted img {
+    width: 112px;
+    height: 155px;
+    border-radius: 0;
+    object-fit: cover;
+    border: none;
+    margin-bottom: 5px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.5);
+}
+
+.card-wanted .info {
+    font-size: 0.9rem;
+    text-align: center;
+    line-height: 1.4;
+    width: 100%;
+    margin-bottom: 5px; /* Adicionado margem para afastar do botão */
+}
+
+.card-wanted .info p {
+    margin: 5px 0;
+    font-weight: bold;
+}
+
+.card-wanted .info p.name-alias {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-wanted .info .large {
+    font-size: 0.9rem;
+    font-weight: normal;
+    text-transform: lowercase;
+}
+
+.card-wanted .info p strong {
+    color: #333;
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Contêiner para os botões */
+.card-buttons-container {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.card-details-btn,
+.card-escalar-btn {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    flex-grow: 1;
+    max-width: 120px;
+    text-align: center;
+}
+
+.card-details-btn {
+    background-color: #007bff;
+}
+
+.card-details-btn:hover {
+    background-color: #0056b3;
+}
+
+.card-escalar-btn {
+    background-color: #28a745;
+}
+
+.card-escalar-btn:hover {
+    background-color: #218838;
+}
+
+.card-wanted .info p.crime-line,
+.card-wanted .info p.faction-line {
+    border-top: 1px solid #4B2A2A;
+    padding-top: 3px;
+    margin-top: 3px;
+}
+
+</style>
+<div class="card-container">
+    {% for card in cards_criminosos %}
+    <div class="card-wrapper">
+        <div class="card-wanted">
+            <h5>PROCURADO</h5>
+            <img src="{{ card.imagem.url }}" alt="Imagem de {{ card.nome }}">
+            <div class="info">
+                <p class="name-alias"><strong>{{ card.nome }}</strong> <large> - {{ card.apelido }}</large></p>
+                <p class="crime-line"><strong>{{ card.crime }}</strong></p>
+                <p class="faction-line"><strong>Facção:</strong> {{ card.faccao }} </p>
+                <p><strong>Recompensa:</strong> {{ card.recompensa }} </p>
+            </div>
+            {# Contêiner para os botões dentro do card-wanted #}
+            <div class="card-buttons-container">
+                <a href="{% url 'criminoso:card_detalhe' card.id %}" class="card-details-btn">Detalhes</a>
+                <a href="{% url 'criminoso:escalar_criminoso' card.id %}" class="card-escalar-btn">Escalar</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class='card-text'>Nenhum criminoso cadastrado. Que tal cadastrar um?</h5>
+        </div>
+        <div class="card-footer">
+            <a href="{% url 'criminoso:card_cadastro' %}" class="btn btn-primary">Cadastrar</a>
+            <a href="{% url 'criminoso:card_criminoso' %}" class="btn btn-secondary">Voltar</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}
+
+{% block scripts %}
+{% endblock scripts %}

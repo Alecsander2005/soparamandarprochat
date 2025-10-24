@@ -1,0 +1,500 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Seus Procurados{% endblock title %}
+
+{% block canvas_title %}Seus Procurados{% endblock canvas_title %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'index' %}">Início</a></li>
+<li class="breadcrumb-item active"><a>Seus Procurados</a></li>
+{% endblock breadcrumb %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/procurados.css' %}">
+{% endblock extra_head %}
+
+{% block content %}
+<style>
+    /* Estilos existentes */
+    .scroll-container {
+        width: 450px;
+        max-width: 90%;
+        position: relative;
+        perspective: 1000px;
+        margin-bottom: 20px;
+    }
+    
+    .scroll-rod {
+        width: 100%;
+        height: 70px;
+        background-image: url('{% static "img/haste.png" %}');
+        background-size: cover;
+        background-position: center;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.0);
+        position: relative;
+        z-index: 2;
+    }
+    
+    .scroll-rod.top {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    
+    .scroll-rod.bottom {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+    
+    .scroll-content-wrapper {
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+        height: 0;
+        background-image: url('{% static "img/corpo_do_pergaminho.png" %}');
+        background-size: cover;
+        background-position: center;
+        overflow: hidden;
+        transition: height 0.8s ease-in-out, padding 0.8s ease-in-out, margin 0.8s ease-in-out;
+        position: relative;
+        z-index: 1;
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.0);
+    
+        margin-top: -15px;
+        margin-bottom: -15px;
+    }
+    
+    .scroll-content-wrapper.open {
+        height: 400px;
+        padding-top: 35px;
+        padding-bottom: 35px;
+    }
+    
+    .scroll-content {
+        width: 100%;
+        height: 100%;
+        padding: 10px 25px;
+        box-sizing: border-box;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out 0.5s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        overflow-y: auto;
+    }
+    
+    .scroll-content-wrapper.open .scroll-content {
+        opacity: 1;
+    }
+    
+    .scroll-image-content {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        border-radius: 3px;
+    }
+    
+    .controls {
+        margin-top: 30px;
+        display: flex;
+        gap: 15px;
+    }
+    
+    .control-button {
+        padding: 12px 25px;
+        font-size: 16px;
+        color: white;
+        background-color: #a0522d;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .control-button:hover {
+        background-color: #8c4624;
+        transform: translateY(-2px);
+    }
+    
+    .control-button:active {
+        transform: translateY(0);
+    }
+    
+    .scroll-content-wrapper::before,
+    .scroll-content-wrapper::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 15px;
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.08), transparent);
+    }
+    
+    .scroll-content-wrapper::before {
+        top: 0;
+    }
+    
+    .scroll-content-wrapper::after {
+        bottom: 0;
+        transform: scaleY(-1);
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.08), transparent);
+    }
+    
+    .status-message {
+        margin-top: 15px;
+        padding: 10px 15px;
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+        border-radius: 6px;
+        text-align: center;
+        font-size: 14px;
+        display: none;
+    }
+    
+    .main-procurados-layout {
+        display: flex; /* Mudar para flex novamente para elementos lado a lado */
+        justify-content: center;
+        align-items: flex-start; /* Alinha o topo dos elementos lado a lado */
+        min-height: calc(100vh - 100px);
+        flex-direction: column; /* Manter column para o título e o contêiner principal */
+        align-items: flex-start; /* Alinha o conteúdo à esquerda */
+    }
+    
+    /* Novo contêiner para o board e o pergaminho, para que fiquem lado a lado */
+    .board-and-parchment-container {
+        display: flex;
+        justify-content: center; /* Centraliza o conjunto board/pergaminho */
+        align-items: flex-start; /* Alinha o topo do board e do pergaminho */
+        width: 100%; /* Ocupa a largura total para centralizar */
+        max-width: 1250px; /* Largura máxima para ambos */
+        margin-top: 20px; /* Adiciona um pouco de espaço abaixo do título */
+    }
+    
+    
+    .procurado-board {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        width: 1100px;
+        height: 700px;
+        background-image: url("{% static 'img/fundo.svg' %}");
+        background-size: cover;
+        background-position: center;
+        border-radius: 15px;
+        padding: 30px;
+        position: relative;
+    }
+    
+    .cards-grid-container {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 20px;
+        max-width: 100%;
+        margin-right: 0.5rem;
+    }
+    
+    .card-wanted {
+        width: 150px;
+        height: 200px; /* Definindo altura para manter consistência */
+        background-image: url("{% static 'img/fundoCard.svg' %}");
+        background-size: 100% 100%;
+        background-position: center;
+        background-repeat: no-repeat;
+        padding: 15px 8px;
+        text-align: center;
+        font-family: 'Times New Roman', serif;
+        color: #000;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        box-sizing: border-box;
+        position: relative;
+    }
+    
+    .card-wanted h5 {
+        font-size: 1rem;
+        font-weight: bold;
+        color: darkred;
+        margin-top: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .card-wanted img {
+        width: 65px;
+        height: 80px;
+        border-radius: 0;
+        object-fit: cover;
+        border: none;
+        margin-bottom: 12px;
+        box-shadow: 0 0 5px rgba(0,0,0,0.4);
+    }
+    
+    .card-wanted .info {
+        font-size: 0.65rem;
+        text-align: center;
+        line-height: 1.2;
+        width: 100%;
+    }
+    
+    .card-wanted .info p {
+        margin: 2px 0;
+        font-weight: bold;
+    }
+    
+    .card-wanted .info p.name-alias {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .card-wanted .info large {
+        font-size: 0.7rem;
+        font-weight: normal;
+        text-transform: lowercase;
+        margin-left: 3px;
+        display: inline;
+    }
+    
+    .card-wanted .info p strong {
+        color: #333;
+    }
+    
+    .card-wanted .info p.crime-line,
+    .card-wanted .info p.faction-line {
+        border-top: 1px solid #4B2A2A;
+        padding-top: 2px;
+        margin-top: 2px;
+    }
+    
+    .card-overlay-games {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        font-size: 2rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        pointer-events: none;
+        border-radius: 3px;
+        z-index: 10;
+        opacity: 0.8;
+    }
+    
+    .add-criminoso-target {
+        width: 150px;
+        height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+        text-decoration: none;
+        color: #fff;
+    }
+    
+    .add-criminoso-target img {
+        width: 80px;
+        height: 80px;
+        object-fit: contain;
+    }
+    
+    .add-criminoso-target:hover {
+        background-color: #555;
+        border-color: #888;
+    }
+    
+    .parchment-placeholder {
+        width: 320px;
+        height: 600px; /* Manter a altura para o layout */
+        background-image: url("{% static 'img/parchment_scroll.png' %}");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .card-details-btn {
+        display: none;
+    }
+    
+    /* Estilos para o novo título responsivo */
+    .section-header {
+        width: 950px; /* Largura padrão para alinhamento com o board */
+        max-width: 90%; /* Responsividade para telas menores */
+        box-sizing: border-box;
+        text-align: left; /* Garante que o conteúdo interno esteja à esquerda */
+    }
+    
+    .section-title {
+        font-size: 2.8rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        line-height: 1.2;
+    }
+    
+    .section-divider {
+        border: 0;
+        height: 2px;
+        background-color: #4B2A2A;
+        margin-bottom: 20px;
+        width: 100%; /* A linha ocupa toda a largura do header */
+    }
+    
+    @media (max-width: 992px) {
+        .section-header {
+            width: 100%;
+            padding: 0 15px;
+        }
+        .section-title {
+            font-size: 2rem;
+        }
+        /* Quebra o layout para coluna quando a tela for pequena */
+        .board-and-parchment-container {
+            flex-direction: column;
+            align-items: center;
+        }
+        .parchment-placeholder {
+            margin-left: 0; /* Remove a margem lateral quando em coluna */
+            margin-top: 30px; /* Adiciona uma margem superior */
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .section-title {
+            font-size: 1.8rem;
+        }
+    }
+    
+    </style>
+    
+    <div class="main-procurados-layout">
+        {# Novo contêiner para o título e a linha divisória #}
+        <div class="section-header">
+            <h2 class="section-title">SEUS PROCURADOS</h2>
+            <hr class="section-divider">
+        </div>
+    
+        {# Novo contêiner para o board e o pergaminho #}
+        <div class="board-and-parchment-container">
+            <div class="procurado-board">
+                <div class="cards-grid-container">
+                    {% for card in criminosos_escalados %}
+                        <div class="card-wanted">
+                            {% if forloop.counter == 3 %}
+                                <div class="card-overlay-games">PRESO</div>
+                            {% endif %}
+                            <h5>PROCURADO</h5>
+                            <img src="{{ card.imagem.url }}" alt="Imagem de {{ card.nome }}">
+                            <div class="info">
+                                <p class="name-alias"><strong>{{ card.nome }}</strong> <large> - {{ card.apelido }}</large></p>
+                                <p class="crime-line"><strong>{{card.crime}}</strong></p>
+                                <p class="faction-line"><strong>Facção:</strong> {{ card.faccao }} </p>
+                            </div>
+                        </div>
+                    {% endfor %}
+    
+                    {% for i in ""|ljust:num_placeholders %}
+                        <a href="{% url 'criminoso:card_listar' %}" class="add-criminoso-target">
+                            <img src="{% static 'img/target.png' %}" alt="Adicionar Criminoso">
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="parchment-placeholder">
+                <div class="scroll-container">
+                    <div class="scroll-rod top"></div>
+    
+                    <div class="scroll-content-wrapper" id="scrollContentWrapper">
+                        <div class="scroll-content" id="scrollContent">
+                            {% for card in criminosos_escalados %}
+    <div style="font-size:1.35rem; font-weight:900; margin-bottom:12px; color:#dff135; letter-spacing:1px; text-shadow:1px 1px 2px #f5deb3;">
+        {{ card.nome }} &mdash;  {{ card.tempo }} meses &mdash;  {{ card.recompensa }}
+    </div>
+                            {% empty %}
+                                <div style="color:#a94442; font-size:1.1rem;">Nenhum criminoso escalado.</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+    
+                    <div class="scroll-rod bottom"></div>
+                </div>
+    
+                <div class="controls">
+                    <button id="openScrollButton" class="control-button">Abrir</button>
+                    <button id="closeScrollButton" class="control-button">Fechar</button>
+                </div>
+    
+                <div id="statusMessage" class="status-message">Pergaminho aberto!</div>
+            </div>
+        </div>
+    </div>
+    {% endblock content %}
+    
+    {% block js %}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const scrollContentWrapper = document.getElementById('scrollContentWrapper');
+            const openScrollButton = document.getElementById('openScrollButton');
+            const closeScrollButton = document.getElementById('closeScrollButton');
+            const statusMessage = document.getElementById('statusMessage');
+    
+            function showStatus(message, isError = false) {
+                statusMessage.textContent = message;
+                statusMessage.style.backgroundColor = isError ? '#f8d7da' : '#d4edda';
+                statusMessage.style.color = isError ? '#721c24' : '#155724';
+                statusMessage.style.borderColor = isError ? '#f5c6cb' : '#c3e6cb';
+                statusMessage.style.display = 'block';
+                setTimeout(() => {
+                    statusMessage.style.display = 'none';
+                }, 3000);
+            }
+    
+            openScrollButton.addEventListener('click', () => {
+                if (!scrollContentWrapper.classList.contains('open')) {
+                    scrollContentWrapper.classList.add('open');
+                    showStatus('Pergaminho aberto!');
+                    openScrollButton.disabled = true;
+                    closeScrollButton.disabled = false;
+                }
+            });
+    
+            closeScrollButton.addEventListener('click', () => {
+                if (scrollContentWrapper.classList.contains('open')) {
+                    scrollContentWrapper.classList.remove('open');
+                    showStatus('Pergaminho fechado.');
+                    openScrollButton.disabled = false;
+                    closeScrollButton.disabled = true;
+                }
+            });
+    
+            closeScrollButton.disabled = true;
+        });
+    </script>
+    {% endblock %}

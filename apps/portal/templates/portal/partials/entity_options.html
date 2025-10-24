@@ -1,0 +1,16 @@
+<!-- apps/portal/templates/partials/entity_options.html -->
+{% load static %}
+<div class="list-group">
+    {% for entity in entities|slice:":10" %}
+    <a href="#" class="list-group-item flex-column align-items-start entity-card hover-effect-entity" data-id="{{ entity.id }}" style="text-decoration: none; color: inherit; cursor: pointer;">
+        <div class="d-flex w-100 justify-content-between align-items-center">
+            <div>
+                <h6 class="mb-1"><strong>{{ entity.name }}</strong></h6>
+                <p>Tipo: {{ entity.organization.name }}<br>Entidade Superior: {{ entity.dad.name|default:"Não possui" }}</p>
+            </div>
+        </div>
+    </a>
+    {% empty %}
+    <div class="list-group-item">Nenhuma entidade encontrada.</div>
+    {% endfor %}
+</div>

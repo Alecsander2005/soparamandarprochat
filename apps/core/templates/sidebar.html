@@ -1,0 +1,105 @@
+ <!-- Aqui você edita a barra lateral esquerda -->
+ <nav class="mt-2">
+  <ul class="nav nav-pills nav-sidebar flex-column nav-flat" data-widget="treeview" role="menu"
+    data-accordion="false">
+    <!-- Add icons to the links using the .nav-icon class
+        with font-awesome or any other icon font library -->
+    <li class="nav-item menu-open">
+      <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-server"></i>
+        <p>
+          Módulo Exemplo
+          <i class="right fas fa-angle-left"></i>
+        </p>
+      </a>
+      <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href={% url "index" %} class="nav-link">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Tela Vazia</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href={% url "exemplo:cadastro" %} class="nav-link">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Cadastrar Exemplos</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href={% url "exemplo:listar" %} class="nav-link">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Listar Exemplos</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href={% url "exemplo:datatable" %} class="nav-link">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Datatable Exemplos</p>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li class="nav-item menu-open">
+      <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-server"></i>
+        <p>
+          Módulo Imagens
+          <i class="right fas fa-angle-left"></i>
+        </p>
+      </a>
+      <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href={% url "imagem:cadastro" %} class="nav-link">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Cadastrar Imagens</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href={% url "imagem:listar" %} class="nav-link">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Listar Imagens</p>
+          </a>
+        </li>
+    </li> 
+    <li class="nav-item menu-open">
+      <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-server"></i>
+        <p>
+          Módulo Portal
+          <i class="right fas fa-angle-left"></i>
+        </p>
+      </a>
+      <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href={% url "portal:list_entity" %} class="nav-link">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Entidades</p>
+          </a>
+        </li>
+      </ul>
+    </li> 
+    <li class="nav-item menu-open">
+      <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-server"></i>
+        <p>
+          Criminoso
+          <i class="right fas fa-angle-left"></i>
+        </p>
+      </a>
+      <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href={% url "criminoso:card_criminoso" %} class="nav-link">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Card Criminoso</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href={% url "criminoso:time_usuario" %} class="nav-link">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Times</p>
+          </a>
+        </li>
+      </ul>
+    </li>    
+  </ul>
+</nav>

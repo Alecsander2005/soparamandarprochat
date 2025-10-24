@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+<!-- Aqui eu defino o título da página -->
+{% block title %}Atualizar Imagem{% endblock title %}
+
+<!-- Aqui eu defino o título que aparece no topo da tela -->
+{% block canvas_title %}Atualização de Imagem{% endblock canvas_title %}
+
+<!-- Aqui eu defino o conteúdo do breadcrumb -->
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href={% url "index" %}>Início</a></li>
+<li class="breadcrumb-item active"><a>Atualizar Imagem</a></li>
+{% endblock breadcrumb %}
+
+<!-- Aqui eu defino o conteúdo da página -->
+{% block content %} 
+<div class="card">
+    <div class="card-body">
+        <form method="post" action="{% url "imagem:atualizar" pk=imagem.pk %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.nome.label_tag }}
+            {{ form.nome }}
+            {{ form.imagem.label_tag }}
+            <div class="input-group">
+                <div class="custom-file">
+                  {{ form.imagem }}
+                  <label class="custom-file-label" for="imagem">Escolha um arquivo...</label>
+                </div>
+              </div>
+            <br>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </form>
+    </div>
+</div>
+{% endblock content %}
+
+<!-- Aqui eu defino scripts customizados -->
+{% block scripts %}
+  <!-- Scripts necessários para o bs-custom-file-field -->
+  <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+  
+  <!-- inicialize o plugin bs-custom-file-input -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        bsCustomFileInput.init();
+    });
+  </script>
+{% endblock scripts %}
+
+

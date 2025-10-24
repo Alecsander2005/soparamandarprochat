@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block title %}Remoção do Criminoso{% endblock title %}
+
+{% block canvas_title %}Remover Criminoso{% endblock canvas_title %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'index' %}">Início</a></li>
+<li class="breadcrumb-item"><a href="{% url 'criminoso:card_criminoso' %}">Criminosos Procurados</a></li>
+<li class="breadcrumb-item active"><a>Remover</a></li>
+{% endblock breadcrumb %}
+
+{% load static %}
+{% block content %}
+<style>
+/* General container for centering the deletion card */
+.delete-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 150px);
+}
+
+/* Style for the deletion "wanted" card - similar to detail, but for deletion */
+.delete-wanted-card {
+    width: 320px;
+    min-height: 520px;
+    background-image: url("{% static 'img/fundoCard.svg' %}");
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    text-align: center;
+    font-family: 'Times New Roman', serif;
+    color: #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.delete-wanted-card h1.confirmation-question { 
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: darkred;
+    letter-spacing: 1px;
+}
+
+
+.delete-wanted-card h5 { /* This is your "PROCURADO" title */
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: darkred;
+    margin-top: 18px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.delete-wanted-card img {
+    width: 120px;
+    height: 160px;
+    border-radius: 0;
+    object-fit: cover;
+    border: none;
+    margin-bottom: 25px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.5);
+}
+
+.delete-wanted-card .info {
+    font-size: 0.95rem;
+    text-align: center;
+    line-height: 1.5;
+    width: 100%;
+}
+
+.delete-wanted-card .info p {
+    margin: 6px 0;
+    font-weight: bold;
+}
+
+.delete-wanted-card .info p.name-alias {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.delete-wanted-card .info large {
+    font-size: 0.9rem;
+    font-weight: normal;
+    text-transform: lowercase;
+    margin-left: 6px;
+}
+
+.delete-wanted-card .info p strong {
+    color: #333;
+}
+
+.delete-wanted-card .info p.crime-line,
+.delete-wanted-card .info p.recompensa-line {
+    border-top: 1px solid #4B2A2A;
+    padding-top: 4px;
+    margin-top: 4px;
+}
+
+.delete-actions {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    width: 100%;
+    padding-bottom: 5rem;
+}
+
+.delete-actions .btn {
+    padding: 8px 18px;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.delete-actions .btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.delete-actions .btn-danger:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
+}
+
+.delete-actions .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.delete-actions .btn-secondary:hover {
+    background-color: #5a6268;
+    transform: translateY(-1px);
+}
+</style>
+
+<div class="delete-container">
+    <div class="delete-wanted-card">
+        <h1 class="confirmation-question">Tem certeza que deseja remover o criminoso abaixo?</h1>
+        <h5>PROCURADO</h5>
+        <img src="{{ criminoso.imagem.url }}" alt="Imagem do Criminoso">
+        <div class="info">
+            <p class="name-alias"><strong>{{ criminoso.nome }}</strong> <large> - {{ criminoso.apelido }}</large></p>
+            <p class="crime-line"><strong>Crime:</strong> {{ criminoso.crime }}</p>
+            <p class="recompensa-line"><strong>Recompensa:</strong> R$ {{ criminoso.recompensa }}</p>
+        </div>
+
+        <div class="delete-actions">
+            <form method="post" style="display: flex; gap: 10px; justify-content: center; width: 100%;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Remover</button>
+                <a href="{% url 'criminoso:card_criminoso' %}" class="btn btn-secondary">Voltar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+{% endblock scripts %}

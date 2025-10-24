@@ -1,0 +1,27 @@
+<!-- apps/portal/templates/partials/military_options.html -->
+{% load static %}
+<div class="list-group">
+    {% for military in militaries|slice:":5" %}
+    {% if action_type %}
+    <a href="#" class="list-group-item flex-column align-items-start military-card hover-effect" data-id="{{ military.id }}" data-type="{{ action_type }}" style="text-decoration: none; color: inherit; cursor: pointer;">
+    {% else %}
+    <a href="#" class="list-group-item flex-column align-items-start military-card hover-effect" data-id="{{ military.id }}" style="text-decoration: none; color: inherit; cursor: pointer;">
+    {% endif %}            
+        <div class="d-flex w-100 justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                {% if military.image %}
+                <img src="{{ military.image.url }}" alt="Foto de {{ military.name }}" class="img-thumbnail" style="width: 100px; height: 100px; margin-right: 20px;">
+                {% else %}
+                <img src="{% static 'sti/img/sem-imagem.jpeg' %}" alt="Sem foto" class="img-thumbnail" style="width: 100px; height: 100px; margin-right: 20px;">
+                {% endif %}
+                <div>
+                    <h6 class="mb-1">{{ military.rank }} {{ military.name }}</h6>
+                    <p>Matrícula: {{ military.register }}<br>CPF: {{ military.cpf }}<br>Entidade: {{ military.entity.name }}</p>
+                </div>
+            </div>
+        </div>
+    </a>
+    {% empty %}
+    <div class="list-group-item">Nenhum resultado encontrado.</div>
+    {% endfor %}
+</div>

@@ -1,0 +1,229 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PMPB | Sistema PFC - Login</title>
+
+  <!-- Google Font -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- Bootstrap 4.6.2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+
+  <style>
+    :root {
+      --cinza-militar: #6e6e6e;
+      --cinza-escuro: #343a40;
+      --cinza-escuro-hover: #23272b;
+      --branco: #ffffff;
+      --cinza-claro: #f8f9fa;
+    }
+    
+    body {
+      background-color: var(--cinza-militar);
+      font-family: 'Source Sans Pro', sans-serif;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('{% static "sti/img/bg-texture.png" %}');
+      background-size: cover;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 400px;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-logo {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .login-logo img {
+      height: 80px;
+      margin-bottom: 15px;
+      transition: transform 0.3s ease;
+    }
+
+    .login-logo img:hover {
+      transform: scale(1.05);
+    }
+
+    .login-logo a {
+      color: var(--branco);
+      font-weight: 700;
+      font-size: 28px;
+      text-decoration: none;
+      display: block;
+      letter-spacing: 1px;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .card {
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+      border: none;
+      overflow: hidden;
+    }
+
+    .login-card-body {
+      background-color: var(--cinza-claro);
+      border-radius: 12px;
+      padding: 35px;
+    }
+
+    .login-box-msg {
+      color: #555;
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 16px;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .form-control {
+      height: 45px;
+      border-radius: 6px !important;
+      border: 1px solid #ddd;
+      transition: border-color 0.3s;
+    }
+
+    .form-control:focus {
+      border-color: var(--cinza-escuro);
+      box-shadow: 0 0 0 0.2rem rgba(52, 58, 64, 0.25);
+    }
+
+    .input-group-text {
+      background-color: #e9ecef;
+      border-radius: 6px 0 0 6px !important;
+      width: 45px;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background-color: var(--cinza-escuro);
+      border: none;
+      height: 45px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      border-radius: 6px;
+      transition: all 0.3s;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--cinza-escuro-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .alert {
+      font-size: 14px;
+      border-radius: 6px;
+      padding: 10px 15px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 13px;
+    }
+
+    /* Efeitos para dispositivos móveis */
+    @media (max-width: 576px) {
+      .login-card-body {
+        padding: 25px;
+      }
+      .login-logo img {
+        height: 70px;
+      }
+    }
+  </style>
+
+  <link rel="icon" type="image/x-icon" href="{% static 'dist/img/pmpb/pmpb_128.png' %}">
+</head>
+<body>
+<div class="login-box">
+  <div class="login-logo">
+    <img src="{% static 'sti/img/pmpb_128.png' %}" alt="Logo PMPB">
+    <a href="#">Sistema PFC</a>
+  </div>
+  <div class="card">
+    <div class="card-body login-card-body">
+      <p class="login-box-msg">Insira suas credenciais para acessar o sistema</p>
+      <form action="{% url 'login' %}" method="post" autocomplete="off">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+          {{ form.email }}
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-envelope"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          {{ form.senha }}
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        {% if error %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <i class="fas fa-exclamation-circle mr-2"></i>{{ error }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endif %}
+        <div class="row">
+          <div class="col">
+            <button type="submit" class="btn btn-primary btn-block">
+              <i class="fas fa-sign-in-alt mr-2"></i>Entrar
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="footer">
+    © {% now "Y" %} Polícia Militar da Paraíba - Todos os direitos reservados
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script>
+  // Foco automático no campo de email
+  $(document).ready(function() {
+    $('input[name="email"]').focus();
+    
+    // Efeito de hover nos campos
+    $('.form-control').hover(
+      function() {
+        $(this).css('border-color', '#aaa');
+      },
+      function() {
+        if (!$(this).is(':focus')) {
+          $(this).css('border-color', '#ddd');
+        }
+      }
+    );
+  });
+</script>
+</body>
+</html>

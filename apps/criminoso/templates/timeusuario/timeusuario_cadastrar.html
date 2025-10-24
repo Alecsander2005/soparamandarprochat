@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+<!-- Aqui eu defino o título da página -->
+{% block title %}Criar Time{% endblock title %}
+
+<!-- Aqui eu defino o título que aparece no topo da tela -->
+{% block canvas_title %}Criar Time de Criminosos{% endblock canvas_title %}
+
+<!-- Aqui eu defino o conteúdo do breadcrumb -->
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="#">Início</a></li>
+<li class="breadcrumb-item active">Criar Time</li>
+{% endblock breadcrumb %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Selecione os Criminosos para o Time</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row">
+            {% for card in cards_criminosos %}
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <img src="{{ card.imagem.url }}" class="card-img-top" alt="{{ card.nome }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ card.nome }}</h5>
+                        <p class="card-text">
+                            <strong>Apelido:</strong> {{ card.apelido }}<br>
+                            <strong>Tempo de Foragido:</strong> {{ card.tempo }} anos<br>
+                            <strong>Recompensa:</strong> R$ {{ card.recompensa }}<br>
+                            <strong>Crime:</strong> {{ card.crime }}
+                        </p>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="cards" value="{{ card.id }}">
+                            <label class="form-check-label">
+                                Selecionar
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class='card-text'>Nenhum criminoso cadastrado para adicionar ao time.</h5>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'criminoso:card_cadastro' %}" class="btn btn-primary">Cadastrar</a>
+                        <a href="{% url 'criminoso:time_usuario' %}" class="btn btn-secondary">Voltar</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% if cards_criminosos %}
+            <div class="d-flex justify-content-end mt-4">
+                <button type="submit" class="btn btn-success">Adicionar</button>
+            </div>
+        {% endif %}
+    </form>
+</div>
+{% endblock content %}

@@ -1,0 +1,79 @@
+<div class="{{ css_class }}">
+    <label for="selected-{{ field_name }}">{{ label }}</label>
+    <div class="input-group">
+        <input type="hidden" name="{{ field_name }}" id="{{ field_name }}_id">
+        <input type="text" id="selected-{{ field_name }}" class="form-control" readonly placeholder="Clique no botão para selecionar {{ label }}">
+        <div class="input-group-append">
+            <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#{{ modal_id }}">
+                Selecionar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para seleção de Entidade -->
+<div class="modal fade" id="{{ modal_id }}" tabindex="-1" role="dialog" aria-labelledby="{{ modal_id }}Label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="{{ modal_id }}Label">Selecionar {{ label }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="{{ field_name }}-search">Buscar {{ label }}</label>
+                    <input type="search" class="form-control" id="{{ field_name }}-search" name="search" placeholder="Nome da Entidade"
+                        hx-get="{% url search_url %}"
+                        hx-trigger="keyup changed delay:500ms"
+                        hx-target="#{{ field_name }}-results"
+                        hx-indicator="#loading-indicator-{{ field_name }}">
+                    <div id="loading-indicator-{{ field_name }}" style="display: none;">Carregando...</div>
+                    <br>
+                    <div id="{{ field_name }}-results"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        function setupEntityClickHandlers() {
+            // Evento de clique para Entidades (Entidade Responsável)
+            document.querySelectorAll('.entity-card').forEach(element => {
+                element.addEventListener('click', function() {
+                    const entityId = this.getAttribute('data-id');
+                    const entityName = this.querySelector('h6 strong').textContent.trim();
+
+                    // Atualiza o campo oculto com o ID da entidade responsável
+                    document.getElementById('{{ field_name }}_id').value = entityId;
+
+                    // Atualiza o campo de texto com o nome da entidade responsável
+                    document.getElementById('selected-{{ field_name }}').value = entityName;
+
+                    // Fecha o modal de seleção de entidade responsável
+                    $('#{{ modal_id }}').modal('hide');
+                });
+            });
+        }
+
+        function setupEntityHoverEffects() {
+            // Aplica efeitos de hover nos cards de Entidades
+            document.querySelectorAll('.hover-effect-entity').forEach(element => {
+                element.addEventListener('mouseenter', () => element.style.backgroundColor = '#d0d0d0');
+                element.addEventListener('mouseleave', () => element.style.backgroundColor = '');
+            });
+        }
+
+        // Após o conteúdo ser carregado via HTMX, reaplica os handlers de clique e efeitos de hover
+        document.body.addEventListener('htmx:afterSwap', () => {
+            setupEntityHoverEffects();
+            setupEntityClickHandlers();
+        });
+
+        // Inicializa os handlers e efeitos na primeira carga da página
+        setupEntityHoverEffects();
+        setupEntityClickHandlers();
+    });
+</script>

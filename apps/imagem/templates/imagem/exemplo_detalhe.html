@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+<!-- Aqui eu defino o título da página -->
+{% block title %}Detalhe da Imagem{% endblock title %}
+
+<!-- Aqui eu defino o título que aparece no topo da tela -->
+{% block canvas_title %}Imagem{% endblock canvas_title %}
+
+<!-- Aqui eu defino o conteúdo do breadcrumb -->
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href={% url "index" %}>Início</a></li>
+<li class="breadcrumb-item active"><a>Detalhe da Imagem</a></li>
+{% endblock breadcrumb %}
+
+<!-- Aqui eu defino o conteúdo da página -->
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <h4>Detalhe da Imagem {{ imagem.id }}</h4>
+        <hr>
+        <div class="row">
+            <div class="col-md-auto">
+                <img src="{{ imagem.imagem.url }}" class="img-fluid" alt="Imagem" style="height: 10rem; object-fit: scale-down;">
+            </div>
+            <div class="col">
+                <p class="card-text">
+                    <b>Nome:</b> {{ imagem.nome }}<br>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'imagem:remover' imagem.id %}" class="btn btn-danger">Remover</a>
+        <a href="{% url 'imagem:atualizar' imagem.id %}" class="btn btn-primary">Editar</a>
+        <a href="{% url 'index' %}" class="btn btn-secondary">Voltar</a>
+  </div> 
+{% endblock content %}
+
+<!-- Aqui eu defino scripts customizados -->
+{% block scripts %}
+{% endblock scripts %}
+

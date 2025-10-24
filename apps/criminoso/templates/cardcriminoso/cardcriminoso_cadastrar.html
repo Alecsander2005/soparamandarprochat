@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% load widget_tweaks %}
+
+{% block title %}Cadastrar Card{% endblock title %}
+
+{% block canvas_title %}Cadastro de Card de Criminoso{% endblock canvas_title %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href={% url "criminoso:card_criminoso" %}>Início</a></li>
+<li class="breadcrumb-item active"><a>Cadastrar Exemplo</a></li>
+{% endblock breadcrumb %}
+
+{% block content %}
+<div class="card shadow-lg border-0 rounded-lg">
+    <div class="card-header bg-gradient-primary text-white text-center py-3">
+        <h4 class="mb-0 fw-bold">
+            <i class="fas fa-user-plus me-2 text-warning"></i> Cadastro de Card de Criminoso
+        </h4>
+    </div>
+    <div class="card-body p-4">
+        <form method="post" enctype="multipart/form-data" action="{% url 'criminoso:card_cadastro' %}">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="{{ form.nome.id_for_label }}" class="form-label d-flex align-items-center fw-semibold custom-label-align">
+                        <i class="fas fa-user me-2 text-info"></i> {{ form.nome.label_tag }}
+                    </label>
+                    {{ form.nome | add_class:"form-control" | attr:"placeholder:Nome Completo" }}
+                    {% if form.nome.errors %}
+                        {% for error in form.nome.errors %}
+                            <div class="text-danger small mt-1"><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ form.apelido.id_for_label }}" class="form-label d-flex align-items-center fw-semibold custom-label-align">
+                        <i class="fas fa-tag me-2 text-success"></i> {{ form.apelido.label_tag }}
+                    </label>
+                    {{ form.apelido | add_class:"form-control" | attr:"placeholder:Apelido (se houver)" }}
+                    {% if form.apelido.errors %}
+                        {% for error in form.apelido.errors %}
+                            <div class="text-danger small mt-1"><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row g-3 mt-3">
+                <div class="col-md-6">
+                    <label for="{{ form.tempo.id_for_label }}" class="form-label d-flex align-items-center fw-semibold custom-label-align">
+                        <i class="fas fa-clock me-2 text-warning"></i> {{ form.tempo.label_tag }}
+                    </label>
+                    {{ form.tempo | add_class:"form-control" | attr:"placeholder:Tempo foragido (meses)" }}
+                    {% if form.tempo.errors %}
+                        {% for error in form.tempo.errors %}
+                            <div class="text-danger small mt-1"><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ form.recompensa.id_for_label }}" class="form-label d-flex align-items-center fw-semibold custom-label-align">
+                        <i class="fas fa-money-bill-wave me-2 text-danger"></i> {{ form.recompensa.label_tag }}
+                    </label>
+                    {{ form.recompensa | add_class:"form-control" | attr:"placeholder:Valor da Recompensa (R$)" }}
+                    {% if form.recompensa.errors %}
+                        {% for error in form.recompensa.errors %}
+                            <div class="text-danger small mt-1"><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row g-3 mt-3">
+                <div class="col-md-6">
+                    <label for="{{ form.faccao.id_for_label }}" class="form-label d-flex align-items-center fw-semibold custom-label-align">
+                        <i class="fas fa-users me-2 text-secondary"></i> {{ form.faccao.label_tag }}
+                    </label>
+                    {{ form.faccao | add_class:"form-control" | attr:"placeholder:Facção" }}
+                    {% if form.faccao.errors %}
+                        {% for error in form.faccao.errors %}
+                            <div class="text-danger small mt-1"><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ form.validade.id_for_label }}" class="form-label d-flex align-items-center fw-semibold custom-label-align">
+                        <i class="fas fa-calendar-alt me-2 text-primary"></i> {{ form.validade.label_tag }}
+                    </label>
+                    {{ form.validade | add_class:"form-control" | attr:"placeholder:Validade do Card" }}
+                    {% if form.validade.errors %}
+                        {% for error in form.validade.errors %}
+                            <div class="text-danger small mt-1"><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="mb-3 mt-3">
+                <label for="{{ form.crime.id_for_label }}" class="form-label d-flex align-items-center fw-semibold custom-label-align">
+                    <i class="fas fa-gavel me-2 text-dark"></i> {{ form.crime.label_tag }}
+                </label>
+                {{ form.crime | add_class:"form-control" | attr:"placeholder:Descrição do Crime" | attr:"rows:4" }}
+                {% if form.crime.errors %}
+                    {% for error in form.crime.errors %}
+                        <div class="text-danger small mt-1"><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</div>
+                        {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="mb-4">
+                <label for="{{ form.imagem.id_for_label }}" class="form-label d-flex align-items-center fw-semibold custom-label-align">
+                    <i class="fas fa-image me-2 text-primary"></i> {{ form.imagem.label_tag }}
+                </label>
+                {{ form.imagem | add_class:"form-control" }}
+                <div class="form-text">Envie uma imagem clara do criminoso (JPG, PNG, até 5MB).</div>
+                {% if form.imagem.errors %}
+                    {% for error in form.imagem.errors %}
+                        <div class="text-danger small mt-1"><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-lg shadow-sm">
+                    <i class="fas fa-save me-2"></i> Salvar Card
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}
+
+{% block js %}
+{% endblock js %}
+
+{% block style_sheet %}
+    {{ block.super }}
+    <style>
+        .bg-gradient-primary {
+            background: linear-gradient(45deg, #0a3069, #0a3069) !important; 
+        }
+        .custom-label-align {
+            align-items: baseline !important; 
+        }
+        .btn {
+            background-color: #0a3069;
+            color: white;
+        }
+    </style>
+{% endblock style_sheet %}

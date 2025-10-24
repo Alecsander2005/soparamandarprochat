@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+<!-- Aqui eu defino o título da página -->
+{% block title %}Página Inicial{% endblock title %}
+
+<!-- Aqui eu defino o título que aparece no topo da tela -->
+{% block canvas_title %}Início{% endblock canvas_title %}
+
+<!-- Aqui eu defino o conteúdo do breadcrumb -->
+{% block breadcrumb %}
+<li class="breadcrumb-item active"><a href="#">Início</a></li>
+{% endblock breadcrumb %}
+
+<!-- Aqui eu defino o conteúdo da página -->
+{% block content %} 
+<div class="card">
+    <div class="card-body">
+        <h5 class='card-text'>Card Criminoso</h5>
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'criminoso:card_cadastro' %}" class="btn btn-primary">Cadastro</a>
+        <a href="{% url 'criminoso:card_listar' %}" class="btn btn-primary">Listar</a>
+  </div>
+</div>
+{% endblock content %}
+
+<!-- Aqui eu defino scripts customizados -->
+{% block scripts %}
+{% endblock scripts %}
+

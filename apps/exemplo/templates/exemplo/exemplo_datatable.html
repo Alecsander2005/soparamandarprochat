@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+<!-- Aqui eu carrego arquivos estáticos -->
+{% load static %}
+
+<!-- Aqui eu defino o título da página -->
+{% block title %}Exemplos Datatables{% endblock title %}
+
+<!-- Aqui eu defino o título que aparece no topo da tela -->
+{% block canvas_title %}Exemplo Datatables{% endblock canvas_title %}
+
+<!-- Aqui eu defino o conteúdo do breadcrumb -->
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href={% url "index" %}>Início</a></li>
+    <li class="breadcrumb-item active"><a>Exemplos Datatables</a></li>
+{% endblock breadcrumb %}
+
+<!-- Aqui eu defino o conteúdo da página -->
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Datatable com Pesquisa</h3>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nome</th>
+                        <th>Descrição</th>
+                        <th>Atualizado</th>
+                        <th>Criado</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in exemplo %}
+                        <tr>
+                            <td>{{ item.id }}</td>
+                            <td>{{ item.nome }}</td>
+                            <td>{{ item.descricao }}</td>
+                            <td>{{ item.editado }}</td>
+                            <td>{{ item.criado }}</td>
+                            <td>
+                                <a href="{% url 'exemplo:detalhe' item.id %}" class="btn btn-primary btn-sm">
+                                    <i class="exemplo:atualizar"></i> Editar
+                                </a>
+                                <a href="{% url 'exemplo:remover' item.id %}" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i> Excluir
+                                </a>
+                                <!-- Add more actions as needed -->
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!-- /.card-body -->
+    </div>
+{% endblock content %}
+
+<!-- Aqui eu defino os scripts da página -->
+{% block scripts %}
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+
+    <style>
+        .dataTables_filter {
+            float: right;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            $('#example1').DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "order": [[0, 'asc']],
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.22/i18n/Portuguese-Brasil.json"
+                },
+                "searching": true
+            });
+        });
+    </script>
+{% endblock scripts %}

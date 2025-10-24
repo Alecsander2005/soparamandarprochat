@@ -1,0 +1,40 @@
+<!-- apps/portal/templates/partials/enjoyer_options.html -->
+{% load static %}
+<div class="list-group">
+    {% for enjoyer in enjoyers|slice:":5" %}
+    {% if action_type %}
+    <a href="#" class="list-group-item d-flex align-items-center enjoyer-card hover-effect-enjoyer" data-id="{{ enjoyer.id }}" data-type="{{ action_type }}" data-name="{{ enjoyer.full_name }}" style="text-decoration: none; color: inherit; cursor: pointer;">
+    {% else %}
+    <a href="#" class="list-group-item d-flex align-items-center enjoyer-card hover-effect-enjoyer" data-id="{{ enjoyer.id }}" data-name="{{ enjoyer.full_name }}" style="text-decoration: none; color: inherit; cursor: pointer;">
+    {% endif %}
+        <div class="d-flex align-items-center">
+            {% if enjoyer.image %}
+            <img src="{{ enjoyer.image.url }}" alt="Foto de {{ enjoyer.full_name }}" class="img-thumbnail" style="width: 100px; height: 100px; margin-right: 20px;">
+            {% else %}
+            <img src="{% static 'sti/img/sem-imagem.jpeg' %}" alt="Sem foto" class="img-thumbnail" style="width: 100px; height: 100px; margin-right: 20px;">
+            {% endif %}
+        </div>
+        <div>
+            <p class="mb-0">
+                <strong>{{ enjoyer.username }} - {{ enjoyer.full_name }}</strong>
+                <br>
+                Email: {{ enjoyer.email }}
+                <br>
+                {% if enjoyer.phone %}
+                    Telefone: {{ enjoyer.phone }}
+                {% else %}
+                    Telefone: Não cadastrado
+                {% endif %}
+                <br>
+                {% if enjoyer.entity %}
+                Entidade: {{ enjoyer.entity.name }}
+                {% else %}
+                Entidade: Não atribuída
+                {% endif %}
+            </p>
+        </div>
+    </a>
+    {% empty %}
+    <div class="list-group-item">Nenhum resultado encontrado.</div>
+    {% endfor %}
+</div>

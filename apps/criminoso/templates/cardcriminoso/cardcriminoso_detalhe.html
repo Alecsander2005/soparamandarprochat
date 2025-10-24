@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block title %}Detalhes do Criminoso{% endblock title %}
+
+{% block canvas_title %}Detalhes do Criminoso{% endblock canvas_title %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'criminoso:card_criminoso' %}">Início</a></li>
+<li class="breadcrumb-item"><a href="{% url 'criminoso:card_listar' %}">Criminosos Procurados</a></li>
+<li class="breadcrumb-item active"><a>Detalhes</a></li>
+{% endblock breadcrumb %}
+
+{% load static %}
+{% block content %}
+<style>
+/* Estilos similares aos cards de lista, mas adaptados para uma única visualização de detalhes */
+.detail-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 150px); /* Ajuste conforme a altura do seu header/footer */
+    padding: 20px; /* Adiciona um padding geral */
+}
+
+.detail-wanted-card {
+    background-image: url("{% static 'img/fundoCard.svg' %}");
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 30px 25px 20px; /* Padding interno, com mais espaço embaixo para botões */
+    text-align: center;
+    font-family: 'Times New Roman', serif;
+    color: #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.detail-wanted-card h5 { /* Título "PROCURADO" */
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: darkred;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.detail-wanted-card img {
+    width: 150px; /* Imagem maior nos detalhes */
+    height: 200px;
+    border-radius: 0;
+    object-fit: cover;
+    border: none;
+    margin-bottom: 20px;
+}
+
+.detail-wanted-card .info {
+    font-size: 1rem;
+    text-align: center;
+    line-height: 1.6;
+    width: 100%;
+    margin-bottom: 20px; /* Espaço antes dos botões */
+}
+
+.detail-wanted-card .info p {
+    margin: 8px 0;
+    font-weight: bold;
+}
+
+.detail-wanted-card .info p.name-alias {
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    white-space: normal; /* Permite quebrar linha se o nome for muito longo */
+    overflow: visible;
+    text-overflow: clip;
+}
+
+.detail-wanted-card .info large {
+    font-size: 1rem;
+    font-weight: normal;
+    text-transform: lowercase;
+    margin-left: 8px;
+    display: inline;
+}
+
+.detail-wanted-card .info p strong {
+    color: #333;
+}
+
+.detail-wanted-card .info p.crime-line,
+.detail-wanted-card .info p.faction-line,
+.detail-wanted-card .info p.recompensa-line {
+    border-top: 1px solid #4B2A2A;
+    padding-top: 5px;
+    margin-top: 5px;
+}
+
+/* Contêiner para os botões de ação */
+.detail-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* Permite quebra de linha em telas pequenas */
+    gap: 15px; /* Espaçamento entre os botões */
+    width: 100%;
+}
+
+.detail-actions .btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    min-width: 120px; /* Largura mínima para os botões */
+    text-align: center;
+}
+
+.detail-actions .btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.detail-actions .btn-primary:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+.detail-actions .btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.detail-actions .btn-danger:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
+}
+
+.detail-actions .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.detail-actions .btn-secondary:hover {
+    background-color: #5a6268;
+    transform: translateY(-1px);
+}
+</style>
+
+<div class="detail-container">
+    <div class="detail-wanted-card">
+        <h5>PROCURADO</h5>
+        <img src="{{ card_criminoso.imagem.url }}" alt="Imagem de {{ card_criminoso.nome }}">
+        <div class="info">
+            <p class="name-alias"><strong>{{ card_criminoso.nome }}</strong> <large> - {{ card_criminoso.apelido }}</large></p>
+            <p class="crime-line"><strong>Crime:</strong> {{ card_criminoso.crime }}</p>
+            <p class="faction-line"><strong>Facção:</strong> {{ card_criminoso.faccao }}</p>
+            <p class="recompensa-line"><strong>Recompensa:</strong> {{ card_criminoso.recompensa }}</p>
+            <p><strong>Tempo de Foragido:</strong> {{ card_criminoso.tempo }} meses</p>
+        </div>
+
+        <div class="detail-actions">
+            <a href="{% url 'criminoso:card_atualizar' card_criminoso.id %}" class="btn btn-primary">Editar</a>
+            <a href="{% url 'criminoso:card_deletar' card_criminoso.id %}" class="btn btn-danger">Remover</a>
+            <a href="{% url 'criminoso:card_listar' %}" class="btn btn-secondary">Voltar</a>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+{% endblock scripts %}
